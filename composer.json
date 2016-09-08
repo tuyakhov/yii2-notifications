@@ -1,0 +1,32 @@
+{
+  "name": "tuyakhov/yii2-notifications",
+  "description": "The extension provides support for sending notifications across a variety of delivery channels, including mail, SMS, Slack etc. Notifications may also be stored in a database so they may be displayed in your web interface.",
+  "type": "yii2-extension",
+  "keywords": ["yii", "yii2", "notifications", "sms", "email", "slack", "tamarin", "transactional messages"],
+  "homepage": "https://github.com/tuyakhov/yii2-notifications",
+  "time": "2016-09-08",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Anton Tuyakhov",
+      "email": "atuyakhov@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/tuyakhov/yii2-notifications/issues",
+    "source": "https://github.com/tuyakhov/yii2-notifications"
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "yiisoft/yii2": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "tuyakhov\\notifications\\": "src/"
+    }
+  }
+}
