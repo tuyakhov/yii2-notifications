@@ -3,10 +3,11 @@
  * @copyright Anton Tuyakhov <atuyakhov@gmail.com>
  */
 
-namespace tuyakhov\notifications;
+namespace tuyakhov\notifications\channels;
 
+use tuyakhov\notifications\NotificationInterface;
 
-interface NotificationChannelInterface
+interface ChannelInterface
 {
     public function send($recipient, NotificationInterface $notification);
 }

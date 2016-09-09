@@ -20,4 +20,11 @@ interface NotifiableInterface
      * @return array
      */
     public function viaChannels();
+
+    /**
+     * Get the notification routing information for the given channel.
+     * @param string $channel
+     * @return mixed
+     */
+    public function routeNotificationFor($channel);
 }

@@ -6,7 +6,7 @@
 namespace tuyakhov\notifications;
 
 
-interface NotificationHandlerInterface
+interface HandlerInterface
 {
     public function __construct($event, $settings = null);
 

@@ -5,13 +5,12 @@
 namespace tuyakhov\notifications\channels;
 
 
-use tuyakhov\notifications\NotificationChannelInterface;
 use tuyakhov\notifications\NotificationInterface;
 use yii\base\Component;
 use yii\di\Instance;
 use yii\mail\MailerInterface;
 
-class MailNotificationChannel extends Component implements NotificationChannelInterface
+class MailNotificationChannel extends Component implements ChannelInterface
 {
     /**
      * @var $mailer MailerInterface|array|string the mailer object or the application component ID of the mailer object.
@@ -26,6 +25,6 @@ class MailNotificationChannel extends Component implements NotificationChannelIn
     
     public function send($recipient, NotificationInterface $notification)
     {
-        
+        $config = $notification->export($recipient);
     }
 }

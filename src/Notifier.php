@@ -4,6 +4,7 @@
  */
 
 namespace tuyakhov\notifications;
+use tuyakhov\notifications\channels\ChannelInterface;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 
@@ -95,7 +96,7 @@ class Notifier extends Component
     /**
      * Returns channel instance
      * @param string $channel the channel name
-     * @return NotificationChannelInterface
+     * @return ChannelInterface
      * @throws InvalidConfigException
      */
     protected function getChannelInstance($channel)
@@ -103,7 +104,7 @@ class Notifier extends Component
         if (!isset($this->channels[$channel])) {
             throw new InvalidConfigException("Notification channel `{$channel}` is not available or configuration is missing");
         }
-        if (!$this->channels[$channel] instanceof NotificationChannelInterface) {
+        if (!$this->channels[$channel] instanceof ChannelInterface) {
             $this->channels[$channel] = \Yii::createObject($this->channels[$channel]);
         }
         return $this->channels[$channel];

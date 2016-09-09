@@ -9,9 +9,10 @@ namespace tuyakhov\notifications;
 interface NotificationInterface
 {
     /**
-     * @return array
+     * @param mixed $recipient
+     * @return mixed
      */
-    public function export();
+    public function export($recipient = null);
 
     /**
      * @return array
