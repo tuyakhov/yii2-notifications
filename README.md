@@ -47,7 +47,7 @@ Notifier is often used as an application component and configured in the applica
            'class' => '\tuyakhov\notifications\Notifier',
            'channels' => [
                'mail' => [
-                   'class' => 'MailChannel',
+                   'class' => '\tuyakhov\notifications\channels\MailChannel',
                    'from' => 'no-reply@example.com'
                ]
            ],
@@ -76,7 +76,7 @@ class InvoicePaid implements NotificationInterface
     
     public function exportForMail() {
         return Yii::createObject([
-           'class' => 'tuyakhov\notifications\messages\MailMessage',
+           'class' => '\tuyakhov\notifications\messages\MailMessage',
            'view' => ['html' => 'invoice-paid'],
            'viewData' => [
                'invoiceNumber' => $this->invoice->id,
