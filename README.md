@@ -61,14 +61,17 @@ Example of notification that covers the case when an invoice has been paid:
 
 ```php
 use tuyakhov\notifications\NotificationInterface;
+use tuyakhov\notifications\NotificationTrait;
 
 class InvoicePaid implements NotificationInterface
  {
+    use NotificationTrait;
+    
     private $invoice;
     
-    public function __cunstruct($invoice) 
+    public function __construct($invoice) 
     {
-        $this->invoice = $invoice
+        $this->invoice = $invoice;
     }
     
     public function exportForMail() {

@@ -22,7 +22,7 @@ class NotifiableBehavior extends Behavior
     public function init()
     {
         parent::init();
-        $this->notifier = Instance::of($this->notifier);
+        $this->notifier = Instance::ensure($this->notifier, 'tuyakhov\notifications\Notifier');
     }
 
     /**
@@ -75,8 +75,8 @@ class NotifiableBehavior extends Behavior
         }
         $notification = $event->data['notification'];
         $config = [];
-        foreach (get_object_vars($event) as $param) {
-            $config[$param] = $event->$param;
+        foreach (get_object_vars($event) as $param => $value) {
+            $config[$param] = $value;
         }
         $config['class'] = $notification;
         /**
