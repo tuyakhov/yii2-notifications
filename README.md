@@ -29,30 +29,75 @@ to the require section of your `composer.json` file.
 Usage
 -----
 
-Once the extension is installed, simply use it in your code by  :
-
-Widget
+The following example shows how to create a Notifier instance and send your first notification:
 
 ```php
-    \tuyakhov\notifications\EmbedWidget::widget([
-        'code' => 'vs5ZF9fRDzA',
-        'playerParameters' => [
-            'controls' => 2
-        ],
-        'iframeOptions' => [
-            'width' => '600',
-            'height' => '450'
-        ]
-    ]);
+$notifier = new \tuyakhov\notifications\Notifier([
+  'channels' => [...],
+]);
+$notifier->send($recipients, $notifications);
 ```
 
-Validator
+Notifier is often used as an application component and configured in the application configuration like the following:
 
 ```php
-    public function rules()
+[
+   'components' => [
+       'notifier' => [
+           'class' => '\tuyakhov\notifications\Notifier',
+           'channels' => [
+               'mail' => [
+                   'class' => 'MailChannel',
+                   'from' => 'no-reply@example.com'
+               ]
+           ],
+       ],
+   ],
+]
+```
+
+Each notification class should implement NotificationInterface and contains a via method and a variable number of message building methods (such as `exportForMail`) that convert the notification to a message optimized for that particular channel.
+Example of notification that covers the case when an invoice has been paid:
+
+```php
+use tuyakhov\notifications\NotificationInterface;
+
+class InvoicePaid implements NotificationInterface
+ {
+    private $invoice;
+    
+    public function __cunstruct($invoice) 
     {
-        return [
-            ['notifications_code', CodeValidator::className()],
-        ];
+        $this->invoice = $invoice
     }
+    
+    public function exportForMail() {
+        return Yii::createObject([
+           'class' => 'tuyakhov\notifications\messages\MailMessage',
+           'view' => ['html' => 'invoice-paid'],
+           'viewData' => [
+               'invoiceNumber' => $this->invoice->id,
+               'amount' => $this->invoice->amount
+           ]
+        ])
+    }
+ }
 ```
+
+You may use the NotifiableInterface and NotifiableTrait on any of your models:
+ 
+ ```php
+ use yii\db\ActiveRecord;
+ use tuyakhov\notifications\NotifiableTrait;
+ use tuyakhov\notifications\NotifiableInterface;
+ 
+ class User extends ActiveRecord implements NotifiableInterface 
+ {
+    use NotifiableTrait;
+    
+    public function routeNotificationForMail() 
+    {
+         return $this->email;
+    }
+ }
+ ```

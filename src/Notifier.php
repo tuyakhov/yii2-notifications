@@ -29,7 +29,7 @@ use yii\base\InvalidConfigException;
  *              'class' => '\tuyakhov\notifications\Notifier',
  *              'channels' => [
  *                  'mail' => [
- *                      'class' => 'EmailNotificationChannel',
+ *                      'class' => 'MailChannel',
  *                  ]
  *              ],
  *          ],
@@ -47,7 +47,7 @@ class Notifier extends Component
      * ```php
      * [
      *     'mail' => [
-     *         'class' => 'EmailNotificationChannel',
+     *         'class' => 'MailChannel',
      *     ],
      * ]
      * ```
