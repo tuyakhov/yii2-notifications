@@ -5,9 +5,10 @@
 
 namespace tuyakhov\notifications\channels;
 
+use tuyakhov\notifications\NotifiableInterface;
 use tuyakhov\notifications\NotificationInterface;
 
 interface ChannelInterface
 {
-    public function send($recipient, NotificationInterface $notification);
+    public function send(NotifiableInterface $recipient, NotificationInterface $notification);
 }

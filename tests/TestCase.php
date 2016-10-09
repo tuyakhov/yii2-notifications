@@ -4,9 +4,7 @@
  */
 namespace tuyakhov\notifications\tests;
 
-use yii\helpers\ArrayHelper;
-
-class TestCase extends \PHPUnit_Framework_TestCase
+class TestCase extends \PHPUnit\Framework\TestCase
 {
 
 }

@@ -6,13 +6,15 @@
 namespace tuyakhov\notifications;
 
 
+use tuyakhov\notifications\messages\AbstractMessage;
+
 interface NotificationInterface
 {
     /**
-     * @param mixed $recipient
-     * @return mixed
+     * @param string $channel
+     * @return AbstractMessage
      */
-    public function export($recipient = null);
+    public function exportFor($channel);
 
     /**
      * @return array

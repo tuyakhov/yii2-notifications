@@ -26,7 +26,8 @@
   },
   "autoload": {
     "psr-4": {
-      "tuyakhov\\notifications\\": "src/"
+      "tuyakhov\\notifications\\": "src/",
+      "tuyakhov\\notifications\\tests\\": "tests/"
     }
   }
 }
