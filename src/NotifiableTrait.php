@@ -17,9 +17,10 @@ trait NotifiableTrait
      */
     public function shouldReceiveNotification(NotificationInterface $notification)
     {
-        $notificationAlias = Inflector::camel2id(get_class($notification));
-        if (isset($this->notificationSettings[$notificationAlias])) {
-            return (bool) $this->notificationSettings[$notificationAlias];
+        $alias = Inflector::camel2id(get_class($notification));
+        $settings = $this->notificationSettings;
+        if (array_key_exists($alias, $settings)) {
+            return (bool) $settings[$alias];
         }
         return true;
     }

@@ -23,7 +23,7 @@ class NotifierTest extends TestCase
         $this->notifier = \Yii::createObject([
             'class' => Notifier::className(),
             'channels' => [
-                'mockChannel' => $this->getMockBuilder(ChannelInterface::class)->getMock()   
+                'mockChannel' => $this->createMock(ChannelInterface::class)
             ]
         ]);
     }
@@ -31,10 +31,10 @@ class NotifierTest extends TestCase
 
     public function testSend()
     {
-        $notification = $this->getMockBuilder(NotificationInterface::class)->getMock();
+        $notification = $this->createMock(NotificationInterface::class);
         $notification->method('broadcastOn')->willReturn(['mockChannel']);
         
-        $recipient = $this->getMockBuilder(NotifiableInterface::class)->getMock();
+        $recipient = $this->createMock(NotifiableInterface::class);
         $recipient->method('shouldReceiveNotification')->willReturn(true);
         $recipient->method('viaChannels')->willReturn(['mockChannel']);
         

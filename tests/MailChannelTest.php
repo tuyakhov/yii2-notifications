@@ -18,14 +18,14 @@ class MailChannelTest extends TestCase
 
     public function testSend() 
     {        
-        $recipient = $this->getMockBuilder(NotifiableInterface::class)->getMock();
+        $recipient = $this->createMock(NotifiableInterface::class);
         $recipient->expects($this->once())
             ->method('routeNotificationFor')
             ->with('mail')
             ->willReturn('test@test.com');
         
-        $mailer = $this->getMockBuilder(MailerInterface::class)->getMock();
-        $message = $this->getMockBuilder(MessageInterface::class)->getMock();
+        $mailer = $this->createMock(MailerInterface::class);
+        $message = $this->createMock(MessageInterface::class);
         $message->method('send');
         $message->expects($this->once())->method('setTo')->with('test@test.com')->willReturnSelf();
         $message->expects($this->once())->method('setFrom')->with('test@admin.com')->willReturnSelf();
@@ -41,7 +41,7 @@ class MailChannelTest extends TestCase
             'from' => 'test@admin.com'
         ]);
         
-        $notification = $this->getMockBuilder(NotificationInterface::class)->getMock();
+        $notification = $this->createMock(NotificationInterface::class);
         $notification->expects($this->once())
             ->method('exportFor')
             ->with('mail')
