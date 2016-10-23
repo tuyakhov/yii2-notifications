@@ -20,7 +20,7 @@ use yii\httpclient\Client;
  *          'notifier' => [
  *              'class' => '\tuyakhov\notifications\Notifier',
  *              'channels' => [
- *                  'mail' => [
+ *                  'sms' => [
  *                      'class' => '\tuyakhov\notifications\channels\TwilioChannel,
  *                      'accountSid' => '...',
  *                      'authToken' => '...',

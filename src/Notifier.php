@@ -29,7 +29,7 @@ use yii\base\InvalidConfigException;
  *              'class' => '\tuyakhov\notifications\Notifier',
  *              'channels' => [
  *                  'mail' => [
- *                      'class' => 'MailChannel',
+ *                      'class' => '\tuyakhov\notifications\channels\MailChannel',
  *                  ]
  *              ],
  *          ],

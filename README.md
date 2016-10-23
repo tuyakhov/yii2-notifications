@@ -49,6 +49,12 @@ Notifier is often used as an application component and configured in the applica
                'mail' => [
                    'class' => '\tuyakhov\notifications\channels\MailChannel',
                    'from' => 'no-reply@example.com'
+               ],
+               'sms' => [
+                   'class' => '\tuyakhov\notifications\channels\TwilioChannel,
+                   'accountSid' => '...',
+                   'authToken' => '...',
+                   'from' => '+1234567890'
                ]
            ],
        ],
@@ -83,6 +89,14 @@ class InvoicePaid implements NotificationInterface
                'amount' => $this->invoice->amount
            ]
         ])
+    }
+    
+    public function exportForSms()
+    {
+        return \Yii::createObject([
+            'class' => '\tuyakhov\notifications\messages\SmsMessage',
+            'text' => "Your invoice #{$this->invoice->id} has been paid"
+        ]);
     }
  }
 ```
