@@ -18,9 +18,14 @@ trait NotifiableTrait
     public function shouldReceiveNotification(NotificationInterface $notification)
     {
         $alias = Inflector::camel2id(get_class($notification));
-        $settings = $this->notificationSettings;
-        if (array_key_exists($alias, $settings)) {
-            return (bool) $settings[$alias];
+        if (isset($this->notificationSettings)) {
+            $settings = $this->notificationSettings;
+            if (array_key_exists($alias, $settings)) {
+                if ($settings[$alias] instanceof \Closure) {
+                    return call_user_func($settings[$alias], $notification);
+                }
+                return (bool) $settings[$alias];
+            }
         }
         return true;
     }
@@ -52,7 +57,7 @@ trait NotifiableTrait
         switch ($channel) {
             case 'mail':
                 return $this->email;
-            case 'nexmo':
+            case 'twilio':
                 return $this->phone_number;
         }
     }
