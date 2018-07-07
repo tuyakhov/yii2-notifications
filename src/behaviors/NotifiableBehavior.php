@@ -3,9 +3,12 @@
  * @copyright Anton Tuyakhov <atuyakhov@gmail.com>
  */
 
-namespace tuyakhov\notifications;
+namespace tuyakhov\notifications\behaviors;
 
 
+use tuyakhov\notifications\NotifiableInterface;
+use tuyakhov\notifications\NotificationInterface;
+use tuyakhov\notifications\Notifier;
 use yii\base\Behavior;
 use yii\base\Event;
 use yii\di\Instance;
@@ -19,6 +22,9 @@ class NotifiableBehavior extends Behavior
      */
     public $notifier = 'notifier';
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function init()
     {
         parent::init();
@@ -62,8 +68,7 @@ class NotifiableBehavior extends Behavior
     /**
      * Handles the event using public properties.
      * @param Event $event
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws \yii\base\InvalidConfigException
      */
     public function handle(Event $event)
     {

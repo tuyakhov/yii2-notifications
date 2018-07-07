@@ -55,6 +55,9 @@ Notifier is often used as an application component and configured in the applica
                    'accountSid' => '...',
                    'authToken' => '...',
                    'from' => '+1234567890'
+               ],
+               'database' => [
+                    'class' => '\tuyakhov\notifications\channels\ActiveRecordChannel'
                ]
            ],
        ],
@@ -118,3 +121,41 @@ You may use the NotifiableInterface and NotifiableTrait on any of your models:
     }
  }
  ```
+ 
+#### Database notifications
+
+The `database` notification channel stores the notification information in a database table.   
+You can query the table to display the notifications in your application's user interface. But, before you can do that, you will need to create a database table to hold your notifications. To do this, you can use the migration that comes with this extension:
+```
+yii migrate --migrationPath=@vendor/tuyakhov/yii2-notifications/src/migrations
+```
+
+**Accessing The Notifications**   
+Once notifications are stored in the database, you need a convenient way to access them from your notifiable entities. The `NotifiableTrait`, which comes with this extension, includes a notifications relationship that returns the notifications for the entity.
+To fetch notifications, you may access this method like any other `ActiveRecord` relationship.
+```php
+$model = User::findOne(1);
+foreach($model->notifications as $notification) {
+    echo $notification->subject;
+}
+```
+If you want to retrieve only the "unread" notifications, you may use the `unreadNotifications` relationship.
+```php
+$model = User::findOne(1);
+foreach($model->unreadNotifications as $notification) {
+    echo $notification->subject;
+}
+```
+**Marking Notifications As Read**   
+Typically, you will want to mark a notification as "read" when a user views it. The `ReadableBehavior` in `Notification` model provides a `markAsRead` method, which updates the read_at column on the notification's database record:
+```php
+$model = User::findOne(1);
+foreach($model->unreadNotifications as $notification) {
+    $notification->markAsRead();
+    
+    // the following methods are also available
+    $notification->markAsUnread();
+    $notification->isUnread();
+    $notification->isRead();
+}
+```

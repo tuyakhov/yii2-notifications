@@ -6,6 +6,8 @@
 namespace tuyakhov\notifications;
 
 
+use tuyakhov\notifications\models\Notification;
+use yii\db\BaseActiveRecord;
 use yii\helpers\Inflector;
 
 trait NotifiableTrait
@@ -59,6 +61,20 @@ trait NotifiableTrait
                 return $this->email;
             case 'twilio':
                 return $this->phone_number;
+            case 'database':
+                return [get_class($this), $this->id];
         }
+    }
+
+    public function getNotifications()
+    {
+        /** @var $this BaseActiveRecord */
+        return $this->hasMany(Notification::className(), ['notifiable_id' => 'id'])
+            ->addOnCondition(['notifiable_type' => get_class($this)]);
+    }
+
+    public function getUnreadNotifications()
+    {
+        return $this->getNotifications()->addOnCondition(['read_at' => null]);
     }
 }

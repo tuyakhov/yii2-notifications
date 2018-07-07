@@ -6,23 +6,17 @@
 namespace tuyakhov\notifications\tests;
 
 
-use tuyakhov\notifications\channels\MailChannel;
 use tuyakhov\notifications\channels\TwilioChannel;
-use tuyakhov\notifications\messages\MailMessage;
 use tuyakhov\notifications\messages\SmsMessage;
-use tuyakhov\notifications\NotifiableInterface;
-use tuyakhov\notifications\NotificationInterface;
 use yii\httpclient\Client;
 use yii\httpclient\Request;
-use yii\mail\MailerInterface;
-use yii\mail\MessageInterface;
 
 class TwilioChannelTest extends TestCase
 {
 
     public function testSend()
     {
-        $recipient = $this->createMock(NotifiableInterface::class);
+        $recipient = $this->createMock('tuyakhov\notifications\NotifiableInterface');
         $recipient->expects($this->once())
             ->method('routeNotificationFor')
             ->with('sms')
@@ -43,7 +37,7 @@ class TwilioChannelTest extends TestCase
             'httpClient' => $client
         ]);
 
-        $notification = $this->createMock(NotificationInterface::class);
+        $notification = $this->createMock('tuyakhov\notifications\NotificationInterface');
         $notification->expects($this->once())
             ->method('exportFor')
             ->with('sms')

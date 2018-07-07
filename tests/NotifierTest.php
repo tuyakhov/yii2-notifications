@@ -4,10 +4,6 @@
  */
 namespace tuyakhov\notifications\tests;
 
-use tuyakhov\notifications\channels\ChannelInterface;
-use tuyakhov\notifications\NotifiableInterface;
-use tuyakhov\notifications\NotificationChannelInterface;
-use tuyakhov\notifications\NotificationInterface;
 use tuyakhov\notifications\Notifier;
 
 class NotifierTest extends TestCase
@@ -23,7 +19,7 @@ class NotifierTest extends TestCase
         $this->notifier = \Yii::createObject([
             'class' => Notifier::className(),
             'channels' => [
-                'mockChannel' => $this->createMock(ChannelInterface::class)
+                'mockChannel' => $this->createMock('tuyakhov\notifications\channels\ChannelInterface')
             ]
         ]);
     }
@@ -31,10 +27,10 @@ class NotifierTest extends TestCase
 
     public function testSend()
     {
-        $notification = $this->createMock(NotificationInterface::class);
+        $notification = $this->createMock('tuyakhov\notifications\NotificationInterface');
         $notification->method('broadcastOn')->willReturn(['mockChannel']);
         
-        $recipient = $this->createMock(NotifiableInterface::class);
+        $recipient = $this->createMock('tuyakhov\notifications\NotifiableInterface');
         $recipient->method('shouldReceiveNotification')->willReturn(true);
         $recipient->method('viaChannels')->willReturn(['mockChannel']);
         
