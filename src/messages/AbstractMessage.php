@@ -5,9 +5,9 @@
 namespace tuyakhov\notifications\messages;
 
 
-use yii\base\Object;
+use yii\base\BaseObject;
 
-abstract class AbstractMessage extends Object
+abstract class AbstractMessage extends BaseObject
 {
     /**
      * The "level" of the notification (info, success, error).
