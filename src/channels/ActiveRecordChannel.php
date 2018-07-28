@@ -34,7 +34,7 @@ class ActiveRecordChannel extends Component implements ChannelInterface
         /** @var DatabaseMessage $message */
         $message = $notification->exportFor('database');
         list($notifiableType, $notifiableId) = $recipient->routeNotificationFor('database');
-        $this->model->insert(true, [
+        return $this->model->insert(true, [
             'level' => $message->level,
             'subject' => $message->subject,
             'body' => $message->body,

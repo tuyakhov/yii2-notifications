@@ -25,6 +25,9 @@ class MailChannel extends Component implements ChannelInterface
      */
     public $from;
 
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         parent::init();
@@ -37,7 +40,7 @@ class MailChannel extends Component implements ChannelInterface
          * @var $message MailMessage
          */
         $message = $notification->exportFor('mail');
-        $this->mailer->compose($message->view, $message->viewData)
+        return $this->mailer->compose($message->view, $message->viewData)
             ->setFrom(isset($message->from) ? $message->from : $this->from)
             ->setTo($recipient->routeNotificationFor('mail'))
             ->setSubject($message->subject)

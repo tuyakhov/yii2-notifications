@@ -5,6 +5,7 @@
 
 namespace tuyakhov\notifications;
 use tuyakhov\notifications\channels\ChannelInterface;
+use tuyakhov\notifications\events\NotificationEvent;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 
@@ -41,6 +42,11 @@ use yii\base\InvalidConfigException;
 class Notifier extends Component
 {
     /**
+     * @event NotificationEvent an event raised right after notification has been sent.
+     */
+    const EVENT_AFTER_SEND = 'afterSend';
+
+    /**
      * @var array defines available channels
      * The syntax is like the following:
      *
@@ -61,6 +67,7 @@ class Notifier extends Component
      * @param array|NotifiableInterface $recipients the recipients that can receive given notifications.
      * @param array|NotificationInterface $notifications the notification that should be delivered.
      * @return void
+     * @throws InvalidConfigException
      */
     public function send($recipients, $notifications)
     {
@@ -87,7 +94,19 @@ class Notifier extends Component
 
                 $channels = array_intersect($channels, $notification->broadcastOn());
                 foreach ($channels as $channel) {
-                    $this->getChannelInstance($channel)->send($recipient, $notification);
+                    $channelInstance = $this->getChannelInstance($channel);
+                    try {
+                        \Yii::info("Sending notification " . get_class($notification) . " to " . get_class($recipient) . " via {$channel}", __METHOD__);
+                        $response = $channelInstance->send($recipient, $notification);
+                    } catch (\Exception $e) {
+                        $response = $e;
+                    }
+                    $this->trigger(self::EVENT_AFTER_SEND, new NotificationEvent([
+                        'notification' => $notification,
+                        'recipient' => $recipient,
+                        'channel' => $channel,
+                        'response' => $response
+                    ]));
                 }
             }
         }

@@ -101,7 +101,7 @@ class TwilioChannel extends Component implements ChannelInterface
         if (isset($message->mediaUrl)) {
             $data['MedialUrl'] = $message->mediaUrl;
         }
-        $this->httpClient
+        return $this->httpClient
             ->createRequest()
             ->setMethod('post')
             ->setUrl($this->getUri())
