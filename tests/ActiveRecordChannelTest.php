@@ -24,18 +24,20 @@ class ActiveRecordChannelTest extends TestCase
             'subject' => 'It',
             'body' => 'Works',
         ]);
-        $notificationModel = $this->createMock('yii\db\ActiveRecordInterface');
-        $notificationModel->method('insert');
+        $notificationModel = $this->createMock('yii\db\BaseActiveRecord');
+        $notificationModel->method('load')->willReturn(true);
         $notificationModel->expects($this->once())
-            ->method('insert')
-            ->with(true, [
+            ->method('load')
+            ->with([
                 'level' => $message->level,
                 'subject' => $message->subject,
                 'body' => $message->body,
                 'notifiable_type' => 'yii\base\DynamicModel',
                 'notifiable_id' => 123,
-            ])
-            ->willReturnSelf();
+            ], '');
+        $notificationModel->method('insert')->willReturn(true);
+        $notificationModel->expects($this->once())
+            ->method('insert');
 
 
         $channel = \Yii::createObject([
