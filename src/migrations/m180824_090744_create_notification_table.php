@@ -8,7 +8,7 @@ namespace tuyakhov\notifications\migrations;
 
 use yii\db\Migration;
 
-class notifications_table extends Migration
+class m180824_090744_create_notification_table extends Migration
 {
     public function up()
     {
