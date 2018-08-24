@@ -18,7 +18,7 @@ class ActiveRecordChannel extends Component implements ChannelInterface
     /**
      * @var ActiveRecordInterface|string
      */
-    public $model = 'tuyakhov\notifications\models\DatabaseNotification';
+    public $model = 'tuyakhov\notifications\models\Notification';
 
     /**
      * @throws \yii\base\InvalidConfigException
