@@ -11,5 +11,4 @@ $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../vendor/yiisoft/yii2/Yii.php');
 
-Yii::setAlias('@tuyakhov/tests', __DIR__);
-Yii::setAlias('@tuyakhov/braintree', dirname(__DIR__));
+Yii::setAlias('@extension', __DIR__ . '/../');
