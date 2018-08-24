@@ -1,10 +1,10 @@
-Notifications for Yii2
+:bell: Notifications for Yii2
 ======================
 This Yii2 extension provides support for sending notifications across a variety of delivery channels, including mail, SMS, Slack etc. Notifications may also be stored in a database so they may be displayed in your web interface.
 
 Typically, notifications should be short, informational messages that notify users of something that occurred in your application. For example, if you are writing a billing application, you might send an "Invoice Paid" notification to your users via the email and SMS channels.
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tuyakhov/yii2-notifications/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tuyakhov/yii2-notifications/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/tuyakhov/yii2-notifications/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tuyakhov/yii2-notifications/build-status/master) [![Code Climate](https://codeclimate.com/github/tuyakhov/yii2-notifications/badges/gpa.svg)](https://codeclimate.com/github/tuyakhov/yii2-notifications)
+[![Latest Stable Version](https://poser.pugx.org/tuyakhov/yii2-notifications/v/stable)](https://packagist.org/packages/tuyakhov/yii2-notifications) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tuyakhov/yii2-notifications/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tuyakhov/yii2-notifications/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/tuyakhov/yii2-notifications/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tuyakhov/yii2-notifications/build-status/master) [![Code Climate](https://codeclimate.com/github/tuyakhov/yii2-notifications/badges/gpa.svg)](https://codeclimate.com/github/tuyakhov/yii2-notifications)
 
 Installation
 ------------
@@ -51,7 +51,7 @@ Notifier is often used as an application component and configured in the applica
                    'from' => 'no-reply@example.com'
                ],
                'sms' => [
-                   'class' => '\tuyakhov\notifications\channels\TwilioChannel,
+                   'class' => '\tuyakhov\notifications\channels\TwilioChannel',
                    'accountSid' => '...',
                    'authToken' => '...',
                    'from' => '+1234567890'
@@ -64,7 +64,13 @@ Notifier is often used as an application component and configured in the applica
    ],
 ]
 ```
+Once the component is configured it may be used for sending notifications:
+```php
+$recipient = User::findOne(1);
+$notification = new InvoicePaid($invoice);
 
+Yii::$app->notifier->send($recipient, $nofitication);
+```
 Each notification class should implement NotificationInterface and contains a via method and a variable number of message building methods (such as `exportForMail`) that convert the notification to a message optimized for that particular channel.
 Example of notification that covers the case when an invoice has been paid:
 
