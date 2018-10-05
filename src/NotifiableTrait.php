@@ -70,11 +70,11 @@ trait NotifiableTrait
     {
         /** @var $this BaseActiveRecord */
         return $this->hasMany(Notification::className(), ['notifiable_id' => 'id'])
-            ->addOnCondition(['notifiable_type' => get_class($this)]);
+            ->andOnCondition(['notifiable_type' => get_class($this)]);
     }
 
     public function getUnreadNotifications()
     {
-        return $this->getNotifications()->addOnCondition(['read_at' => null]);
+        return $this->getNotifications()->andOnCondition(['read_at' => null]);
     }
 }
