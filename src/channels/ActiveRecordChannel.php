@@ -28,11 +28,12 @@ class ActiveRecordChannel extends Component implements ChannelInterface
     public function init()
     {
         parent::init();
-        $this->model = Instance::ensure($this->model, 'yii\db\BaseActiveRecord');
     }
 
     public function send(NotifiableInterface $recipient, NotificationInterface $notification)
     {
+        $model = Instance::ensure($this->model, 'yii\db\BaseActiveRecord');
+
         /** @var DatabaseMessage $message */
         $message = $notification->exportFor('database');
         list($notifiableType, $notifiableId) = $recipient->routeNotificationFor('database');
@@ -45,7 +46,7 @@ class ActiveRecordChannel extends Component implements ChannelInterface
             'notifiable_id' => $notifiableId,
         ];
 
-        if ($this->model->load($data, '')) {
+        if ($model->load($data, '')) {
             return $this->model->insert();
         }
 
