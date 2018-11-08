@@ -24,7 +24,8 @@ class ReadableBehavior extends Behavior
         /** @var ActiveRecordInterface $model */
         $model = $this->owner;
         if (is_null($model->{$this->readAttribute})) {
-            $model->update(false, [$this->readAttribute => date('Y-m-d H:i:s')]);
+            $model->{$this->readAttribute} = date('Y-m-d H:i:s');
+            $model->update(false, [$this->readAttribute]);
         }
     }
 
@@ -39,7 +40,8 @@ class ReadableBehavior extends Behavior
         /** @var ActiveRecordInterface $model */
         $model = $this->owner;
         if (!is_null($model->{$this->readAttribute})) {
-            $model->update(false, [$this->readAttribute => null]);
+            $model->{$this->readAttribute} = null;
+            $model->update(false, [$this->readAttribute]);
         }
     }
 
