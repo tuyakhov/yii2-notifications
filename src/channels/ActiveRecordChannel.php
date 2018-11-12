@@ -10,10 +10,8 @@ use tuyakhov\notifications\messages\DatabaseMessage;
 use tuyakhov\notifications\NotifiableInterface;
 use tuyakhov\notifications\NotificationInterface;
 use yii\base\Component;
-use yii\base\DynamicModel;
-use yii\db\ActiveRecordInterface;
+use yii\base\InvalidConfigException;
 use yii\db\BaseActiveRecord;
-use yii\di\Instance;
 
 class ActiveRecordChannel extends Component implements ChannelInterface
 {
@@ -22,17 +20,14 @@ class ActiveRecordChannel extends Component implements ChannelInterface
      */
     public $model = 'tuyakhov\notifications\models\Notification';
 
-    /**
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function init()
-    {
-        parent::init();
-        $this->model = Instance::ensure($this->model, 'yii\db\BaseActiveRecord');
-    }
-
     public function send(NotifiableInterface $recipient, NotificationInterface $notification)
     {
+        $model = \Yii::createObject($this->model);
+
+        if (!$model instanceof BaseActiveRecord) {
+            throw new InvalidConfigException('Model class must extend from \\yii\\db\\BaseActiveRecord');
+        }
+
         /** @var DatabaseMessage $message */
         $message = $notification->exportFor('database');
         list($notifiableType, $notifiableId) = $recipient->routeNotificationFor('database');
@@ -44,8 +39,8 @@ class ActiveRecordChannel extends Component implements ChannelInterface
             'notifiable_id' => $notifiableId,
         ];
 
-        if ($this->model->load($data, '')) {
-            return $this->model->insert();
+        if ($model->load($data, '')) {
+            return $model->insert();
         }
 
         return false;
