@@ -24,25 +24,26 @@ class ActiveRecordChannelTest extends TestCase
             'subject' => 'It',
             'body' => 'Works',
         ]);
-        $notificationModel = $this->createMock('yii\db\BaseActiveRecord');
-        $notificationModel->method('load')->willReturn(true);
-        $notificationModel->expects($this->once())
-            ->method('load')
-            ->with([
-                'level' => $message->level,
-                'subject' => $message->subject,
-                'body' => $message->body,
-                'notifiable_type' => 'yii\base\DynamicModel',
-                'notifiable_id' => 123,
-            ], '');
-        $notificationModel->method('insert')->willReturn(true);
-        $notificationModel->expects($this->once())
-            ->method('insert');
-
 
         $channel = \Yii::createObject([
             'class' => 'tuyakhov\notifications\channels\ActiveRecordChannel',
-            'model' => $notificationModel,
+            'model' => function () use ($message) {
+                $notificationModel = $this->createMock('yii\db\BaseActiveRecord');
+                $notificationModel->method('load')->willReturn(true);
+                $notificationModel->expects($this->once())
+                    ->method('load')
+                    ->with([
+                        'level' => $message->level,
+                        'subject' => $message->subject,
+                        'body' => $message->body,
+                        'notifiable_type' => 'yii\base\DynamicModel',
+                        'notifiable_id' => 123,
+                    ], '');
+                $notificationModel->method('insert')->willReturn(true);
+                $notificationModel->expects($this->once())
+                    ->method('insert');
+                return $notificationModel;
+            },
         ]);
 
         $notification = $this->createMock('tuyakhov\notifications\NotificationInterface');
