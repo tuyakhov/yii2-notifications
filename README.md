@@ -135,6 +135,23 @@ You can query the table to display the notifications in your application's user 
 ```
 yii migrate --migrationPath=@vendor/tuyakhov/yii2-notifications/src/migrations
 ```
+or
+```php
+'controllerMap' => [
+    ...
+    'migrate' => [
+        'class' => 'yii\console\controllers\MigrateController',
+        'migrationNamespaces' => [
+            'tuyakhov\notifications\migrations',
+        ],
+    ],
+    ...
+],
+```
+
+```
+php yii migrate/up
+```
 
 **Accessing The Notifications**   
 Once notifications are stored in the database, you need a convenient way to access them from your notifiable entities. The `NotifiableTrait`, which comes with this extension, includes a notifications relationship that returns the notifications for the entity.
