@@ -69,7 +69,7 @@ Once the component is configured it may be used for sending notifications:
 $recipient = User::findOne(1);
 $notification = new InvoicePaid($invoice);
 
-Yii::$app->notifier->send($recipient, $nofitication);
+Yii::$app->notifier->send($recipient, $notification);
 ```
 Each notification class should implement NotificationInterface and contains a via method and a variable number of message building methods (such as `exportForMail`) that convert the notification to a message optimized for that particular channel.
 Example of notification that covers the case when an invoice has been paid:
@@ -125,6 +125,13 @@ You may use the NotifiableInterface and NotifiableTrait on any of your models:
     {
          return $this->email;
     }
+
+    // By default only 'mail' channel is used
+    public function viaChannels()
+    {
+        return ['mail', 'database', ];
+    }
+
  }
  ```
  

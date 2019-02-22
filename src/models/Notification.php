@@ -26,6 +26,11 @@ use yii\db\Expression;
 class Notification extends ActiveRecord
 {
 
+    public static function tableName()
+    {
+        return 'notification';
+    }
+    
     /**
      * @inheritdoc
      */
