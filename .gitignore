@@ -3,3 +3,4 @@ vendor
 composer.phar
 .DS_Store
 composer.lock
+phpunit.xml

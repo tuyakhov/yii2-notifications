@@ -23,8 +23,14 @@
     "yiisoft/yii2-httpclient": "^2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "*"
+    "phpunit/phpunit": "^7.0"
   },
+  "repositories": [
+      {
+          "type": "composer",
+          "url": "https://asset-packagist.org"
+      }
+  ],
   "autoload": {
     "psr-4": {
       "tuyakhov\\notifications\\": "src/",
