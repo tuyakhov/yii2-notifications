@@ -25,4 +25,10 @@ class MailMessage extends AbstractMessage
      * @var string
      */
     public $from;
+
+    /**
+     * Attach files from local file system, array contain file path
+     * @var array
+     */
+    public $attachFiles;
 }
