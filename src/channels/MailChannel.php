@@ -2,6 +2,7 @@
 /**
  * @copyright Anton Tuyakhov <atuyakhov@gmail.com>
  */
+
 namespace tuyakhov\notifications\channels;
 
 
@@ -33,17 +34,26 @@ class MailChannel extends Component implements ChannelInterface
         parent::init();
         $this->mailer = Instance::ensure($this->mailer, 'yii\mail\MailerInterface');
     }
-    
+
     public function send(NotifiableInterface $recipient, NotificationInterface $notification)
     {
         /**
          * @var $message MailMessage
          */
         $message = $notification->exportFor('mail');
-        return $this->mailer->compose($message->view, $message->viewData)
+        $mail = $this->mailer->compose($message->view, $message->viewData)
             ->setFrom(isset($message->from) ? $message->from : $this->from)
             ->setTo($recipient->routeNotificationFor('mail'))
-            ->setSubject($message->subject)
-            ->send();
+            ->setSubject($message->subject);
+
+        if (!empty($message->attachFiles)) {
+            foreach ($message->attachFiles as $file) {
+                if (file_exists($file)) {
+                    $mail->attach($file);
+                }
+            }
+        }
+
+        return $mail->send();
     }
 }
