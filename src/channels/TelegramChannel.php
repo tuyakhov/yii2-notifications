@@ -47,6 +47,16 @@ class TelegramChannel extends Component implements ChannelInterface
     const PARSE_MODE_MARKDOWN = "Markdown";
 
     /**
+     * @var bool
+     * If you need to change silent_mode, you can use this code before calling telegram channel
+     *
+     * \Yii::$container->set('\app\additional\notification\TelegramChannel', [
+     *                         'silent_mode' => true,
+     * ]);
+     */
+    public $silent_mode = false;
+
+    /**
      * @throws \yii\base\InvalidConfigException
      */
     public function init()
@@ -65,21 +75,24 @@ class TelegramChannel extends Component implements ChannelInterface
         $this->httpClient = Instance::ensure($this->httpClient, Client::className());
     }
 
+
     /**
      * @param NotifiableInterface $recipient
      * @param NotificationInterface $notification
      * @return mixed
+     * @throws \Exception
      */
     public function send(NotifiableInterface $recipient, NotificationInterface $notification)
     {
         /** @var TelegramMessage $message */
         $message = $notification->exportFor('telegram');
         $text = "*{$message->subject}*\n{$message->body}";
-        $chatId = $recipient->routeNotificationFor('telegram');
+        $chat_id = $recipient->routeNotificationFor('telegram');
 
         $data = [
-            "chat_id" => $chatId,
+            "chat_id" => $chat_id,
             "text" => $text,
+            'disable_notification' => $this->silent_mode
         ];
         if($this->parse_mode != null){
             $data["parse_mode"] = $this->parse_mode;
