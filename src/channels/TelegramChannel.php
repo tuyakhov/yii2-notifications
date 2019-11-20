@@ -88,6 +88,9 @@ class TelegramChannel extends Component implements ChannelInterface
         $message = $notification->exportFor('telegram');
         $text = "*{$message->subject}*\n{$message->body}";
         $chat_id = $recipient->routeNotificationFor('telegram');
+        if(!$chat_id){
+            throw new \Exception("User doesn't have telegram_id");
+        }
 
         $data = [
             "chat_id" => $chat_id,
