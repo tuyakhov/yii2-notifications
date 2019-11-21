@@ -13,11 +13,6 @@ use yii\httpclient\Client;
 class TelegramChannel extends Component implements ChannelInterface
 {
     /**
-     * @var BaseActiveRecord|string
-     */
-    public $model = 'app\additional\notification\Notification';
-
-    /**
      * @var Client|array|string
      */
     public $httpClient;
@@ -25,7 +20,7 @@ class TelegramChannel extends Component implements ChannelInterface
     /**
      * @var string
      */
-    public $api_url = "https://api.telegram.org/bot";
+    public $apiUrl = "https://api.telegram.org/";
 
     /**
      * @var string
@@ -35,12 +30,12 @@ class TelegramChannel extends Component implements ChannelInterface
     /**
      * @var string
      */
-    public $bot_token;
+    public $botToken;
 
     /**
      * @var string
      */
-    public $parse_mode = null;
+    public $parseMode = null;
 
     const PARSE_MODE_HTML = "HTML";
 
@@ -48,13 +43,13 @@ class TelegramChannel extends Component implements ChannelInterface
 
     /**
      * @var bool
-     * If you need to change silent_mode, you can use this code before calling telegram channel
+     * If you need to change silentMode, you can use this code before calling telegram channel
      *
      * \Yii::$container->set('\app\additional\notification\TelegramChannel', [
-     *                         'silent_mode' => true,
+     *                         'silentMode' => true,
      * ]);
      */
-    public $silent_mode = false;
+    public $silentMode = false;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -63,13 +58,14 @@ class TelegramChannel extends Component implements ChannelInterface
     {
         parent::init();
 
-        if(!isset($this->bot_id) || !isset($this->bot_token)){
+        if(!isset($this->bot_id) || !isset($this->botToken)){
             throw new InvalidConfigException("Bot id or bot token is undefined");
         }
 
         if (!isset($this->httpClient)) {
             $this->httpClient = [
                 'class' => Client::className(),
+                'baseUrl' => $this->apiUrl
             ];
         }
         $this->httpClient = Instance::ensure($this->httpClient, Client::className());
@@ -95,22 +91,21 @@ class TelegramChannel extends Component implements ChannelInterface
         $data = [
             "chat_id" => $chat_id,
             "text" => $text,
-            'disable_notification' => $this->silent_mode
+            'disable_notification' => $this->silentMode
         ];
-        if($this->parse_mode != null){
-            $data["parse_mode"] = $this->parse_mode;
+        if($this->parseMode  != null){
+            $data["parse_mode"] = $this->parseMode;
         }
 
-        $resultUrl = $this->createUrl();
         return $this->httpClient->createRequest()
             ->setMethod('post')
-            ->setUrl($resultUrl)
+            ->setUrl($this->createUrl())
             ->setData($data)
             ->send();
     }
 
     private function createUrl()
     {
-        return $this->api_url . $this->bot_id . ":" . $this->bot_token . "/sendmessage";
+        return "bot" . $this->bot_id . ":" . $this->botToken . "/sendmessage";
     }
 }
