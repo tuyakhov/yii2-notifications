@@ -1,4 +1,7 @@
 <?php
+/**
+ * @copyright Anton Tuyakhov <atuyakhov@gmail.com>
+ */
 
 namespace tuyakhov\notifications\channels;
 
@@ -6,10 +9,16 @@ use tuyakhov\notifications\NotifiableInterface;
 use tuyakhov\notifications\NotificationInterface;
 use tuyakhov\notifications\messages\TelegramMessage;
 use yii\base\Component;
+use yii\base\InvalidArgumentException;
+use yii\base\InvalidConfigException;
 use yii\di\Instance;
-use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\httpclient\Client;
 
+/**
+ * See an example flow of sending notifications in Telegram
+ * @see https://core.telegram.org/bots#deep-linking-example
+ */
 class TelegramChannel extends Component implements ChannelInterface
 {
     /**
@@ -23,11 +32,8 @@ class TelegramChannel extends Component implements ChannelInterface
     public $apiUrl = "https://api.telegram.org/";
 
     /**
-     * @var string
-     */
-    public $bot_id;
-
-    /**
+     * Each bot is given a unique authentication token when it is created.
+     * The token looks something like 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
      * @var string
      */
     public $botToken;
@@ -35,21 +41,11 @@ class TelegramChannel extends Component implements ChannelInterface
     /**
      * @var string
      */
-    public $parseMode = null;
+    public $parseMode = self::PARSE_MODE_MARKDOWN;
 
     const PARSE_MODE_HTML = "HTML";
 
     const PARSE_MODE_MARKDOWN = "Markdown";
-
-    /**
-     * @var bool
-     * If you need to change silentMode, you can use this code before calling telegram channel
-     *
-     * \Yii::$container->set('\app\additional\notification\TelegramChannel', [
-     *                         'silentMode' => true,
-     * ]);
-     */
-    public $silentMode = false;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -58,14 +54,14 @@ class TelegramChannel extends Component implements ChannelInterface
     {
         parent::init();
 
-        if(!isset($this->bot_id) || !isset($this->botToken)){
-            throw new InvalidConfigException("Bot id or bot token is undefined");
+        if(!isset($this->botToken)){
+            throw new InvalidConfigException('Bot token is undefined');
         }
 
         if (!isset($this->httpClient)) {
             $this->httpClient = [
                 'class' => Client::className(),
-                'baseUrl' => $this->apiUrl
+                'baseUrl' => $this->apiUrl,
             ];
         }
         $this->httpClient = Instance::ensure($this->httpClient, Client::className());
@@ -73,32 +69,41 @@ class TelegramChannel extends Component implements ChannelInterface
 
 
     /**
-     * @param NotifiableInterface $recipient
-     * @param NotificationInterface $notification
-     * @return mixed
-     * @throws \Exception
+     * @inheritDoc
      */
     public function send(NotifiableInterface $recipient, NotificationInterface $notification)
     {
         /** @var TelegramMessage $message */
         $message = $notification->exportFor('telegram');
-        $text = "*{$message->subject}*\n{$message->body}";
-        $chat_id = $recipient->routeNotificationFor('telegram');
-        if(!$chat_id){
-            throw new \Exception("User doesn't have telegram_id");
+        $text = $message->body;
+        if (!empty($message->subject)) {
+            $text = "*{$message->subject}*\n{$message->body}";
+        }
+        $chatId = $recipient->routeNotificationFor('telegram');
+        if(!$chatId){
+            throw new InvalidArgumentException( 'No chat ID provided');
         }
 
         $data = [
-            "chat_id" => $chat_id,
-            "text" => $text,
-            'disable_notification' => $this->silentMode
+            'chat_id' => $chatId,
+            'text' => $text,
+            'disable_notification' => $message->silentMode,
+            'disable_web_page_preview' => $message->withoutPagePreview,
         ];
-        if($this->parseMode  != null){
-            $data["parse_mode"] = $this->parseMode;
+
+        if ($message->replyToMessageId) {
+            $data['reply_to_message_id'] = $message->replyToMessageId;
+        }
+
+        if ($message->replyMarkup) {
+            $data['reply_markup'] = Json::encode($message->replyMarkup);
+        }
+
+        if(isset($this->parseMode)){
+            $data['parse_mode'] = $this->parseMode;
         }
 
         return $this->httpClient->createRequest()
-            ->setMethod('post')
             ->setUrl($this->createUrl())
             ->setData($data)
             ->send();
@@ -106,6 +111,6 @@ class TelegramChannel extends Component implements ChannelInterface
 
     private function createUrl()
     {
-        return "bot" . $this->bot_id . ":" . $this->botToken . "/sendmessage";
+        return "bot{$this->botToken}/sendMessage";
     }
 }

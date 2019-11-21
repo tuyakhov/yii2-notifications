@@ -1,6 +1,6 @@
 :bell: Notifications for Yii2
 ======================
-This Yii2 extension provides support for sending notifications across a variety of delivery channels, including mail, SMS, Slack etc. Notifications may also be stored in a database so they may be displayed in your web interface.
+This Yii2 extension provides support for sending notifications across a variety of delivery channels, including mail, SMS, Slack, Telegram etc. Notifications may also be stored in a database so they may be displayed in your web interface.
 
 Typically, notifications should be short, informational messages that notify users of something that occurred in your application. For example, if you are writing a billing application, you might send an "Invoice Paid" notification to your users via the email and SMS channels.
 
@@ -56,6 +56,10 @@ Notifier is often used as an application component and configured in the applica
                    'authToken' => '...',
                    'from' => '+1234567890'
                ],
+               'telegram' => [
+                    'class' => '\tuyakhov\notifications\channels\TelegramChannel',
+                    'botToken' => '...'
+                ],
                'database' => [
                     'class' => '\tuyakhov\notifications\channels\ActiveRecordChannel'
                ]
@@ -69,7 +73,7 @@ Once the component is configured it may be used for sending notifications:
 $recipient = User::findOne(1);
 $notification = new InvoicePaid($invoice);
 
-Yii::$app->notifier->send($recipient, $nofitication);
+Yii::$app->notifier->send($recipient, $notification);
 ```
 Each notification class should implement `NotificationInterface` and contain a `viaChannels` method and a variable number of message building methods (such as `exportForMail`) that convert the notification to a message optimized for that particular channel.
 Example of a notification that covers the case when an invoice has been paid:
