@@ -45,7 +45,7 @@ class TelegramChannel extends Component implements ChannelInterface
      * @var bool
      * If you need to change silentMode, you can use this code before calling telegram channel
      *
-     * \Yii::$container->set('\app\additional\notification\TelegramChannel', [
+     * \Yii::$container->set('\tuyakhov\notifications\channels\TelegramChannel', [
      *                         'silentMode' => true,
      * ]);
      */
