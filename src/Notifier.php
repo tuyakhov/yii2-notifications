@@ -99,6 +99,7 @@ class Notifier extends Component
                         \Yii::info("Sending notification " . get_class($notification) . " to " . get_class($recipient) . " via {$channel}", __METHOD__);
                         $response = $channelInstance->send($recipient, $notification);
                     } catch (\Exception $e) {
+                        \Yii::error($e->getMessage());
                         $response = $e;
                     }
                     $this->trigger(self::EVENT_AFTER_SEND, new NotificationEvent([
