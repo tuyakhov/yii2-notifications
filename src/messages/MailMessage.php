@@ -28,6 +28,11 @@ class MailMessage extends AbstractMessage
 
     /**
      * Attach files from local file system, array contain file path
+     * Example:
+     * [
+     *     'full/path/to/file1.jpg',
+     *     'full/path/to/file2.pdf',
+     * ]
      * @var array
      */
     public $attachFiles;
