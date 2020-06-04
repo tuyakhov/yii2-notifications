@@ -124,7 +124,7 @@ class InvoicePaid implements NotificationInterface
     public function exportForDatabase()
     {
         return \Yii::createObject([
-            'class' => '\tuyakhov\notifications\messages\DatabaseChannel',
+            'class' => '\tuyakhov\notifications\messages\DatabaseMessage',
             'subject' => "Invoice has been paid",
             'body' => "Your invoice #{$this->invoice->id} has been paid",
             'data' => [
