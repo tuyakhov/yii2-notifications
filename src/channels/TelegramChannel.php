@@ -29,7 +29,7 @@ class TelegramChannel extends Component implements ChannelInterface
     /**
      * @var string
      */
-    public $apiUrl = "https://api.telegram.org/";
+    public $apiUrl = "https://api.telegram.org";
 
     /**
      * Each bot is given a unique authentication token when it is created.
