@@ -31,6 +31,11 @@ use yii\helpers\Json;
 class Notification extends ActiveRecord
 {
 
+    public static function tableName()
+    {
+        return 'notification';
+    }
+    
     /**
      * @inheritdoc
      */

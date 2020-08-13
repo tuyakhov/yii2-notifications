@@ -150,6 +150,13 @@ You may use the NotifiableInterface and NotifiableTrait on any of your models:
     {
          return $this->email;
     }
+
+    // By default only 'mail' channel is used
+    public function viaChannels()
+    {
+        return ['mail', 'database', ];
+    }
+
  }
  ```
  
