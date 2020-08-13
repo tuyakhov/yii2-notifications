@@ -12,6 +12,7 @@ use tuyakhov\notifications\NotificationInterface;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\db\BaseActiveRecord;
+use yii\helpers\Json;
 
 class ActiveRecordChannel extends Component implements ChannelInterface
 {
@@ -37,6 +38,7 @@ class ActiveRecordChannel extends Component implements ChannelInterface
             'body' => $message->body,
             'notifiable_type' => $notifiableType,
             'notifiable_id' => $notifiableId,
+            'data' => Json::encode($message->data),
         ];
 
         if ($model->load($data, '')) {

@@ -4,6 +4,8 @@
  */
 namespace tuyakhov\notifications\tests;
 
+use yii\console\Application;
+
 class TestCase extends \PHPUnit\Framework\TestCase
 {
 

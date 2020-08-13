@@ -1,6 +1,6 @@
 :bell: Notifications for Yii2
 ======================
-This Yii2 extension provides support for sending notifications across a variety of delivery channels, including mail, SMS, Slack etc. Notifications may also be stored in a database so they may be displayed in your web interface.
+This Yii2 extension provides support for sending notifications across a variety of delivery channels, including mail, SMS, Slack, Telegram etc. Notifications may also be stored in a database so they may be displayed in your web interface.
 
 Typically, notifications should be short, informational messages that notify users of something that occurred in your application. For example, if you are writing a billing application, you might send an "Invoice Paid" notification to your users via the email and SMS channels.
 
@@ -56,6 +56,10 @@ Notifier is often used as an application component and configured in the applica
                    'authToken' => '...',
                    'from' => '+1234567890'
                ],
+               'telegram' => [
+                    'class' => '\tuyakhov\notifications\channels\TelegramChannel',
+                    'botToken' => '...'
+                ],
                'database' => [
                     'class' => '\tuyakhov\notifications\channels\ActiveRecordChannel'
                ]
@@ -71,8 +75,8 @@ $notification = new InvoicePaid($invoice);
 
 Yii::$app->notifier->send($recipient, $notification);
 ```
-Each notification class should implement NotificationInterface and contains a via method and a variable number of message building methods (such as `exportForMail`) that convert the notification to a message optimized for that particular channel.
-Example of notification that covers the case when an invoice has been paid:
+Each notification class should implement `NotificationInterface` and contain a `viaChannels` method and a variable number of message building methods (such as `exportForMail`) that convert the notification to a message optimized for that particular channel.
+Example of a notification that covers the case when an invoice has been paid:
 
 ```php
 use tuyakhov\notifications\NotificationInterface;
@@ -88,7 +92,10 @@ class InvoicePaid implements NotificationInterface
     {
         $this->invoice = $invoice;
     }
-    
+
+    /**
+     * Prepares notification for 'mail' channel
+     */
     public function exportForMail() {
         return Yii::createObject([
            'class' => '\tuyakhov\notifications\messages\MailMessage',
@@ -100,11 +107,29 @@ class InvoicePaid implements NotificationInterface
         ])
     }
     
+    /**
+     * Prepares notification for 'sms' channel
+     */
     public function exportForSms()
     {
         return \Yii::createObject([
             'class' => '\tuyakhov\notifications\messages\SmsMessage',
             'text' => "Your invoice #{$this->invoice->id} has been paid"
+        ]);
+    }
+    
+    /**
+     * Prepares notification for 'database' channel
+     */
+    public function exportForDatabase()
+    {
+        return \Yii::createObject([
+            'class' => '\tuyakhov\notifications\messages\DatabaseMessage',
+            'subject' => "Invoice has been paid",
+            'body' => "Your invoice #{$this->invoice->id} has been paid",
+            'data' => [
+                'actionUrl' => ['href' => '/invoice/123/view', 'label' => 'View Details']
+            ]
         ]);
     }
  }
@@ -176,6 +201,12 @@ foreach($model->unreadNotifications as $notification) {
     echo $notification->subject;
 }
 ```
+You can access custom JSON data that describes the notification and was added using `DatabaseMessage`:
+```php
+/** @var $notificatiion tuyakhov\notifications\models\Notificatios */
+$actionUrl = $notification->data('actionUrl'); // ['href' => '/invoice/123/pay', 'label' => 'Pay Invoice']
+```
+
 **Marking Notifications As Read**   
 Typically, you will want to mark a notification as "read" when a user views it. The `ReadableBehavior` in `Notification` model provides a `markAsRead` method, which updates the read_at column on the notification's database record:
 ```php
