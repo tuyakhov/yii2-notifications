@@ -63,7 +63,7 @@ class Notifier extends Component
     /**
      * Sends the given notifications through available channels to the given notifiable entities.
      * You may pass an array in order to send multiple notifications to multiple recipients.
-     * 
+     *
      * @param array|NotifiableInterface $recipients the recipients that can receive given notifications.
      * @param array|NotificationInterface $notifications the notification that should be delivered.
      * @return void
@@ -77,14 +77,14 @@ class Notifier extends Component
              */
             $recipients = [$recipients];
         }
-        
+
         if (!is_array($notifications)){
             /**
              * @var $notifications NotificationInterface[]
              */
             $notifications = [$notifications];
         }
-        
+
         foreach ($recipients as $recipient) {
             $channels = array_intersect($recipient->viaChannels(), array_keys($this->channels));
             foreach ($notifications as $notification) {
@@ -99,6 +99,7 @@ class Notifier extends Component
                         \Yii::info("Sending notification " . get_class($notification) . " to " . get_class($recipient) . " via {$channel}", __METHOD__);
                         $response = $channelInstance->send($recipient, $notification);
                     } catch (\Exception $e) {
+                        \Yii::error($e->getMessage());
                         $response = $e;
                     }
                     $this->trigger(self::EVENT_AFTER_SEND, new NotificationEvent([
