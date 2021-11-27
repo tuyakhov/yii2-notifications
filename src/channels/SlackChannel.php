@@ -44,7 +44,7 @@ class SlackChannel extends Component implements ChannelInterface
     public function send(NotifiableInterface $recipient, NotificationInterface $notification)
     {
         /** @var SlackMessage $message */
-        $message = $notification->exportFor('slack');
+        $message = $notification->exportFor('slack', $recipient);
         $webhookUrl = $recipient->routeNotificationFor('slack');
         $text = "*{$message->subject}*\n{$message->body}";
         return $this->httpClient->createRequest()

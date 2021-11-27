@@ -96,7 +96,7 @@ class InvoicePaid implements NotificationInterface
     /**
      * Prepares notification for 'mail' channel
      */
-    public function exportForMail() {
+    public function exportForMail(NotifiableInterface $receiver) {
         return Yii::createObject([
            'class' => '\tuyakhov\notifications\messages\MailMessage',
            'view' => ['html' => 'invoice-paid'],
@@ -110,7 +110,7 @@ class InvoicePaid implements NotificationInterface
     /**
      * Prepares notification for 'sms' channel
      */
-    public function exportForSms()
+    public function exportForSms(NotifiableInterface $receiver)
     {
         return \Yii::createObject([
             'class' => '\tuyakhov\notifications\messages\SmsMessage',
@@ -121,7 +121,7 @@ class InvoicePaid implements NotificationInterface
     /**
      * Prepares notification for 'database' channel
      */
-    public function exportForDatabase()
+    public function exportForDatabase(NotifiableInterface $receiver)
     {
         return \Yii::createObject([
             'class' => '\tuyakhov\notifications\messages\DatabaseMessage',

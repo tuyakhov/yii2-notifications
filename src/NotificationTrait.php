@@ -44,10 +44,10 @@ trait NotificationTrait
      * @return AbstractMessage
      * @throws \InvalidArgumentException
      */
-    public function exportFor($channel)
+    public function exportFor($channel, ?NotifiableInterface $receiver = null)
     {
         if (method_exists($this, $method = 'exportFor'.Inflector::id2camel($channel))) {
-            return $this->{$method}();
+            return $this->{$method}($receiver);
         }
         throw new \InvalidArgumentException("Can not find message export for chanel `{$channel}`");
     }

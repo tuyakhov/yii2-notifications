@@ -15,7 +15,7 @@ interface NotificationInterface
      * @param string $channel
      * @return AbstractMessage
      */
-    public function exportFor($channel);
+    public function exportFor($channel, ?NotifiableInterface $receiver = null);
 
     /**
      * Determines on which channels the notification will be delivered
