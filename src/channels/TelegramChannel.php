@@ -74,7 +74,7 @@ class TelegramChannel extends Component implements ChannelInterface
     public function send(NotifiableInterface $recipient, NotificationInterface $notification)
     {
         /** @var TelegramMessage $message */
-        $message = $notification->exportFor('telegram');
+        $message = $notification->exportFor('telegram', $recipient);
         $text = $message->body;
         if (!empty($message->subject)) {
             $text = "*{$message->subject}*\n{$message->body}";

@@ -92,7 +92,7 @@ class TwilioChannel extends Component implements ChannelInterface
     public function send(NotifiableInterface $recipient, NotificationInterface $notification)
     {
         /** @var SmsMessage $message */
-        $message = $notification->exportFor('sms');
+        $message = $notification->exportFor('sms', $recipient);
         $data = [
             'From' => isset($message->from) ? $message->from : $this->from,
             'To' => $recipient->routeNotificationFor('sms'),
